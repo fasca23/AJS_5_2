@@ -2,10 +2,6 @@ const types = [
   'Bowman', 'Swordsman', 'Magician', 'Daemon', 'Undead', 'Zombie',
 ];
 
-// const types = [
-//   'Лучник', 'Мечник', 'Маг', 'Демон', 'Нежить', 'Зомби',
-// ];
-
 export default class Character {
   constructor(name, type, attack, defence) {
     // Длина имени более 2 и менее 10 должна быть
