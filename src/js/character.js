@@ -3,7 +3,7 @@ const types = [
 ];
 
 export default class Character {
-  constructor(name, type, attack, defence) {
+  constructor(name, type) {
     // Длина имени более 2 и менее 10 должна быть
     if (name.length < 2 || name.length > 10) {
       // Если не так бросаем исключение
@@ -17,23 +17,27 @@ export default class Character {
     this.type = type;
     this.health = 100;
     this.level = 1;
-    this.attack = attack;
-    this.defence = defence;
+    this.attack = undefined;
+    this.defence = undefined;
   }
 
   levelUp() {
-    if (this.health > 0) {
+    if (this.health <= 0) {
+      throw new Error('Нельзя поднять уровень мертвого персонажа');
+    } else {
       this.level += 1;
       this.attack *= 1.2;
       this.defence *= 1.2;
       this.health = 100;
-    } else {
-      throw new Error('Нельзя поднять уровень мертвого персонажа');
     }
   }
 
   damage(points) {
-    this.health -= points * (1 - this.defence / 100);
+    if (this.health <= 0) {
+      throw new Error('Нельзя нанести урон мертвому персонажу');
+    } else {
+      this.health -= points * (1 - this.defence / 100);
+    }
     if (this.health < 0) {
       this.health = 0;
     }

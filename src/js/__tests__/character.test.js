@@ -1,48 +1,60 @@
 import Character from '../character';
+import Magician from '../magician';
 
 test('Проверка имени персонажа, если короткое', () => {
   expect(
-    () => new Character('П', 'Bowman', 100, 100),
+    () => new Character('П', 'Bowman'),
   ).toThrow('Неправильная длина имени персонажа');
 });
 
 test('Проверка имени персонажа, если длинное', () => {
   expect(
-    () => new Character('Петяяяяяяяяяяяяяяяяяяяяя', 'Swordsman', 100, 100),
+    () => new Character('Петяяяяяяяяяяяяяяяяяяяяя', 'Swordsman'),
   ).toThrow('Неправильная длина имени персонажа');
 });
 
 test('Проверка правильности ввода типа персонажа', () => {
   expect(
-    () => new Character('Петя', 'Леший', 100, 100),
+    () => new Character('Петя', 'Леший'),
   ).toThrow('Нет такого типа персонажа');
 });
 
-// Проверка дамага
 test('Получение урона персонажем', () => {
-  // Создаем тестового перса
-  const testPers = new Character('Вова', 'Magician', 10, 40);
-  testPers.damage(50);
+  const testPers = new Magician('Вова');
+  testPers.damage(150);
   expect(testPers).toEqual({
     name: 'Вова',
     type: 'Magician',
-    health: 70,
+    health: 10,
     level: 1,
     attack: 10,
     defence: 40,
   });
 });
 
-test('Отсутствие урона у мертвого персонажа', () => {
-  const testPers = new Character('Петя', 'Magician', 10, 40);
-  testPers.health = 10;
-  testPers.damage(100);
-  expect(testPers.health).toEqual(0);
+test('Если урон загоняет здоровье в минус', () => {
+  const testPers = new Magician('Вова');
+  testPers.damage(200);
+  expect(testPers).toEqual({
+    name: 'Вова',
+    type: 'Magician',
+    health: 0,
+    level: 1,
+    attack: 10,
+    defence: 40,
+  });
 });
 
-// Проверка поднятия уровня
+test('Если прилетает урон по мертвому персу', () => {
+  const testPers = new Magician('Петя');
+  testPers.health = 0;
+  expect(() => testPers.damage(100)).toThrow(
+    'Нельзя нанести урон мертвому персонажу',
+  );
+});
+
 test('Переход на следующий уровень', () => {
-  const testPers = new Character('Вова', 'Magician', 10, 40);
+  const testPers = new Magician('Вова');
   testPers.health = 10;
   testPers.levelUp();
   expect(testPers).toEqual({
@@ -56,7 +68,7 @@ test('Переход на следующий уровень', () => {
 });
 
 test('Поднятие уровня у мертвого перса', () => {
-  const testPers = new Character('Вова', 'Magician', 10, 40);
+  const testPers = new Magician('Вова');
   testPers.health = 0;
   expect(() => testPers.levelUp()).toThrow(
     'Нельзя поднять уровень мертвого персонажа',
